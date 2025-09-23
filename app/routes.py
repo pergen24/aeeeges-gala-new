@@ -1,12 +1,13 @@
 import os
 from flask import Blueprint, current_app, render_template, request, redirect, url_for, send_file, flash
 from werkzeug.utils import secure_filename
-from . import db
+from . import db, mail
 from .models import TicketPurchase
 from .utils import generate_ticket_pdf, send_ticket_email
 from .auth import admin_required
 import re
 import dns.resolver
+from flask_mail import Message
 #from werkzeug.security import generate_password_hash, check_password_hash
 
 

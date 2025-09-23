@@ -274,9 +274,29 @@ def admin_suspend(purchase_id):
                 except Exception as e:
                     current_app.logger.warning(f"No se pudo borrar {file_path}: {e}")
 
+    # Enviar correo de notificación
+    try:
+        msg = Message(
+            subject="Solicitud de Ticket Denegada - Gala Event",
+            recipients=[purchase.email],
+            body=f"""Hola {purchase.first_name},
+
+Lamentamos informarte que tu solicitud para el ticket ({purchase.ticket_type}) 
+ha sido denegada por el administrador.
+
+Si crees que se trata de un error, por favor contacta con el equipo de soporte.
+
+Atentamente,
+Equipo Gala Event
+"""
+        )
+        mail.send(msg)
+    except Exception as e:
+        current_app.logger.error(f"Error al enviar correo de suspensión: {e}")
+
     # Eliminar la compra de la base de datos
     db.session.delete(purchase)
     db.session.commit()
 
-    flash(f"El recibo #{purchase.id} fue suspendido y eliminado correctamente.", "danger")
+    flash(f"El recibo #{purchase.id} fue suspendido, eliminado y el usuario notificado.", "danger")
     return redirect(url_for("main.admin_index"))

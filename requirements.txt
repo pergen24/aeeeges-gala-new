@@ -8,4 +8,4 @@ reportlab
 python-dotenv
 Werkzeug
 Flask-Mail
-reportlab
+dnspython

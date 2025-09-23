@@ -314,9 +314,13 @@ Lamentamos informarte que tu solicitud para el ticket ({purchase.ticket_type})
 ha sido denegada por el administrador.
 
 Si crees que se trata de un error, por favor contacta con el equipo de soporte.
+visionalfa29@gmail.com
++221 77 554 20 15
++221 78 103 70 64
++221 77 175 53 52
 
 Atentamente,
-Equipo Gala Event
+VISION ALFA
 """
         )
         mail.send(msg)

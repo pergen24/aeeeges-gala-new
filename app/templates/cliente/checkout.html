@@ -27,6 +27,7 @@
                 <div class="col-12">
                   <label for="email" class="form-label">Correo electrónico</label>
                   <input type="email" class="form-control" id="email" name="email" required>
+                  <div id="email-suggestion" class="text-danger small mt-1"></div>
                 </div>
 
                 <div class="col-12">
@@ -65,7 +66,7 @@
             <h2><i class="bi bi-credit-card-2-front"></i> Pago por transferencia Orange Money o WAVE</h2>
             <p class="fw-bold mt-3">PERGENTINO MEMBILA MBASI</p>
             <p class="fs-5">NUMERO: <span class="text-warning">+221 77 554 20 15</span></p>
-            <p class="small text-secondary mt-2">Realiza la transferencia a este Numeru y guarda el comprobante para subirlo después.</p>
+            <p class="small text-secondary mt-2">Realiza la transferencia a este número y guarda el comprobante para subirlo después.</p>
           </div>
         </div>
 
@@ -73,4 +74,23 @@
     </div>
   </div>
 </div>
+
+<!-- Mailcheck.js para sugerencias de correos -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mailcheck/1.1.2/mailcheck.min.js"></script>
+<script>
+document.getElementById("email").addEventListener("blur", function() {
+  var email = this.value;
+  Mailcheck.run({
+    email: email,
+    domains: ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "protonmail.com", "icloud.com"],
+    suggested: function(suggestion) {
+      document.getElementById("email-suggestion").innerText =
+        "¿Quisiste decir: " + suggestion.full + " ?";
+    },
+    empty: function() {
+      document.getElementById("email-suggestion").innerText = "";
+    }
+  });
+});
+</script>
 {% endblock %}

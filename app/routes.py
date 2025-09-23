@@ -5,6 +5,8 @@ from . import db
 from .models import TicketPurchase
 from .utils import generate_ticket_pdf, send_ticket_email
 from .auth import admin_required
+import re
+import dns.resolver
 #from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -62,6 +64,21 @@ def ticket_image(ticket_type):
 #    return render_template('cliente/ticket_image.html', ticket_type=ticket_type, img_path=img_path)
 
 
+# Regex simple para validar estructura del email
+EMAIL_REGEX = re.compile(r"^[\w\.-]+@[\w\.-]+\.\w+$")
+
+def is_valid_email(email):
+    """Valida formato y dominio del correo"""
+    if not EMAIL_REGEX.match(email):
+        return False
+
+    try:
+        domain = email.split("@")[1]
+        # verificar que el dominio tenga registros MX
+        dns.resolver.resolve(domain, "MX")
+        return True
+    except Exception:
+        return False
 
 
 @bp.route('/checkout/<ticket_type>', methods=['GET', 'POST'])
@@ -75,6 +92,14 @@ def checkout(ticket_type):
         city = request.form.get('city')
         phone = request.form.get('phone')
 
+        # ✅ validar email antes de guardar
+        if not is_valid_email(email):
+            flash("❌ El correo electrónico no es válido o el dominio no existe.", "danger")
+            return render_template('cliente/checkout.html', ticket_type=ticket_type,
+                                   first_name=first_name, last_name=last_name,
+                                   email=email, address=address, city=city, phone=phone)
+
+        # Guardar si todo va bien
         purchase = TicketPurchase(
             ticket_type=ticket_type,
             first_name=first_name,
@@ -88,10 +113,13 @@ def checkout(ticket_type):
         db.session.add(purchase)
         db.session.commit()
 
-        # redirigir a página para que suba su recibo (transferencia externa)
+        # redirigir a página para que suba su recibo
         return redirect(url_for('.subir_recibo', purchase_id=purchase.id))
 
     return render_template('cliente/checkout.html', ticket_type=ticket_type)
+
+
+
 
 #@bp.route('/subir_recibo/<int:purchase_id>', methods=['GET', 'POST'])
 #def subir_recibo(purchase_id):

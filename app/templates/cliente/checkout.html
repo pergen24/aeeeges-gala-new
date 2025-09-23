@@ -21,8 +21,45 @@
             </div>
             <div class="card-body p-4">
               <form method="post" class="row g-3">
-                <!-- campos del formulario aquí -->
+
+                <div class="col-md-6">
+                  <label for="first_name" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="first_name" name="first_name" required>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="last_name" class="form-label">Apellidos</label>
+                  <input type="text" class="form-control" id="last_name" name="last_name" required>
+                </div>
+
+                <div class="col-12">
+                  <label for="email" class="form-label">Correo electrónico</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                  <div id="email-suggestion" class="text-danger small mt-1"></div>
+                </div>
+
+                <div class="col-12">
+                  <label for="address" class="form-label">Dirección</label>
+                  <input type="text" class="form-control" id="address" name="address">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="city" class="form-label">Ciudad</label>
+                  <input type="text" class="form-control" id="city" name="city">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="phone" class="form-label">Teléfono</label>
+                  <input type="text" class="form-control" id="phone" name="phone">
+                </div>
+
+                <div class="col-12 d-grid">
+                  <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                    Continuar y subir comprobante después
+                  </button>
+                </div>
               </form>
+
               <div class="alert alert-info mt-4" role="alert">
                 <i class="bi bi-info-circle-fill"></i>
                 Nota: La transferencia se realiza de manera externa; deberás subir el recibo en la siguiente página.
@@ -46,11 +83,31 @@
   </div>
 </div>
 
+<!-- Mailcheck.js para sugerencias de correos -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mailcheck/1.1.2/mailcheck.min.js"></script>
+<script>
+document.getElementById("email").addEventListener("blur", function() {
+  var email = this.value;
+  Mailcheck.run({
+    email: email,
+    domains: ["gmail.com", "outlook.com", "hotmail.com", "yahoo.com", "protonmail.com", "icloud.com"],
+    suggested: function(suggestion) {
+      document.getElementById("email-suggestion").innerText =
+        "¿Quisiste decir: " + suggestion.full + " ?";
+    },
+    empty: function() {
+      document.getElementById("email-suggestion").innerText = "";
+    }
+  });
+});
+</script>
+
 <style>
-  /* Ajusta el bloque de soporte si quieres más separación o tamaño */
+  /* Ajuste del bloque de soporte */
   .support-box {
     max-width: 220px;
     font-size: 0.9rem;
   }
 </style>
+
 {% endblock %}

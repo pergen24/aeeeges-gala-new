@@ -26,9 +26,12 @@ def generate_ticket_pdf(purchase):
         c.drawString(100, y, line.strip())
         y -= 20
 
-    # Generar QR con URL al ticket
-    # Aquí asumimos que tu app está en localhost; usa url_for con _external=True si estás en app context
-    qr_url = f"http://192.168.1.11:5000{url_for('main.ticket_image', ticket_type=purchase.ticket_type)}"
+    # Generar QR con URL al ticket (usar dominio de Render con _external=True)
+    qr_url = url_for(
+        'main.ticket_image',
+        ticket_type=purchase.ticket_type,
+        _external=True
+    )
     qr_img = qrcode.make(qr_url)
 
     # Guardar QR en BytesIO en formato PNG
